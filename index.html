@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>YT Payment</title>
+</head>
+<body>
+
+<h3>ยืนยันการโอน</h3>
+
+<select id="name">
+  <option value="">เลือกชื่อ</option>
+  <option value="A">A</option>
+  <option value="B">B</option>
+  <option value="C">C</option>
+</select>
+
+<br><br>
+<input type="file" id="slip" accept="image/*">
+<br><br>
+
+<button onclick="submitPay()">โอนแล้ว</button>
+<p id="result"></p>
+
+<script>
+const API_URL = "ใส่ URL จาก Apps Script";
+
+function submitPay() {
+  const name = document.getElementById("name").value;
+  const file = document.getElementById("slip").files[0];
+
+  if (!name || !file) {
+    alert("กรอกให้ครบ");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function () {
+    const base64 = reader.result.split(",")[1];
+
+    fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: name,
+        month: "Jan 2026",
+        image: base64,
+        type: file.type
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("result").innerText =
+        data.status === "duplicate"
+        ? "⚠️ เคยโอนแล้ว"
+        : "✅ สำเร็จ";
+    });
+  };
+
+  reader.readAsDataURL(file);
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin</title>
+<style>
+.card { border:1px solid #ccc; padding:10px; margin:10px 0; }
+img { width:180px; }
+</style>
+</head>
+<body>
+
+<h3>สถานะการโอน</h3>
+<div id="list"></div>
+
+<script>
+const API_URL = "ใส่ URL เดิม";
+
+fetch(API_URL)
+  .then(res => res.json())
+  .then(data => {
+    const list = document.getElementById("list");
+    data.reverse().forEach(r => {
+      list.innerHTML += 
+        <div class="card">
+          <b>${r[0]}</b><br>
+          ${r[1]}<br>
+          ${new Date(r[2]).toLocaleString()}<br>
+          <a href="${r[3]}" target="_blank">
+            <img src="${r[3]}">
+          </a>
+        </div>;
+    });
+  });
+</script>
+
+</body>
+</html>
